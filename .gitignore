@@ -1,5 +1,5 @@
 # exclude all data and model iles
 data/*
-!data
+!data/.gitkeep
 models/*
-!models
+!models/.gitkeep
