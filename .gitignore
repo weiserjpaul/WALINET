@@ -1,3 +1,5 @@
 # exclude all data and model iles
 data/*
+!data
 models/*
+!models
