@@ -1,4 +1,4 @@
-# exclude all data and model iles
+# exclude data and model files
 data/*
 !data/.gitkeep
 !data/vol22
