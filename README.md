@@ -61,7 +61,7 @@ pip install numpy h5py time torch
 ### Usage
 
 #### Simulate Training Data
-Training data is generated from the 'LipProj' (sipid projection operator) and the 'LipStack' (stack of lipid contaminated spectra) file in the 'data' directory. The resulting training dataset will also be located in 'data'. The training data simulation can be initiated with
+Training data is generated from the 'LipProj' (lipid projection operator) and the 'LipStack' (stack of lipid contaminated spectra) file in the 'data' directory. The resulting training dataset will also be located in 'data'. The training data simulation can be initiated with
 ```
 python makeTrainData.py
 ```
