@@ -1,6 +1,6 @@
 import sys
-from LipIDCNN.GenerationFID import Gene_FID_withLipids
-sys.path.insert(0, '/autofs/space/somes_002/users/pweiser/lipidSuppressionCNN/make_CNN_StackData_rrrt/LipIDCNN/GenerationFID')
+from GenerationFID import Gene_FID_withLipids
+sys.path.insert(0, '/autofs/space/somes_002/users/pweiser/lipidSuppressionCNN/make_CNN_StackData_rrrt/GenerationFID')
 
 CNNTrainingDataPath = 'data/vol22/CNNLipTrainingData_vol22.h5'
 NameStackLipDataPath = 'data/vol22/vol22_LipStack_100MB.h5'

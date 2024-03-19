@@ -1,6 +1,6 @@
 
-import matplotlib.pyplot as plt
-import os, io, pickle
+
+import os, io
 import h5py
 
 import pandas as pd
@@ -11,7 +11,6 @@ import glob
 import sys
 import time
 import re
-from functools import partial
 
 
 def ReadModeFiles(index,list_file):
@@ -20,10 +19,6 @@ def ReadModeFiles(index,list_file):
     for i, filename in enumerate(list_file):
         metabo_mode = pd.read_csv(filename, header=None, skiprows=[0]).values
         m = re.search("[0-9]T_.{1,6}_Exact", filename)
-        # a = filename.find("_?T_") + 4
-        # b = filename.find('_Exact')
-        # print('filename is {}.'.format(filename))
-        # print('Metab Name string is {}.'.format(filename[m.span()[0]+3:m.span()[1]-6].strip()))
         name = bytes(filename[m.span()[0]+3:m.span()[1]-6].strip(), 'utf8')
         temp_modes[index[name]] = metabo_mode
     return temp_modes
@@ -50,8 +45,7 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
         Lipid_rf, Fs, Npt, N1_lip, N2_lip, NMRFreq =tools.load_LipidStackdata(LipStackFile)
         print('shape of Lipid_rf ={}.'.format(Lipid_rf.shape))
         print("Nb of Nan in Lipid_rf = ", np.sum(np.isnan(Lipid_rf[:])))
-    #if WaterStackFile:
-    #    Water_rf, Fs, Npt, N1, N2, NMRFreq =tools.load_LipidStackdata(WaterStackFile)
+    
     LipOp_cff, Fs, Npt, N1, N2,NMRFreq =tools.load_LipidOpdata(LipOpFile)
     LipOp_cff = np.array(LipOp_cff)
     print('shape of LipOp_cff ={}.'.format(LipOp_cff.shape))
@@ -61,11 +55,8 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
         print('Generating data ... ')
     
 
-    #print('np.shape(Lipid_rf): {}'.format(np.shape(Lipid_rf)))
+    
     N = Npt #np.shape(Lipid_rf)[1]
-
-    #N1 = int(np.around(((4.7-wstart) * 1e-6 * NMRFreq)* N / Fs))
-    #N2 = int(np.around(((4.7-wend) * 1e-6 * NMRFreq)* N / Fs))
 
     TimeSerie = np.zeros(( N), dtype=np.complex64)
     TimeSerieClean = np.zeros(( N), dtype=np.complex64)
@@ -81,9 +72,6 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
     BLSpectra = np.zeros((NbEx, (N2-N1)), dtype=np.complex64)
     WaterSpectra = np.zeros((NbEx, (N2-N1)), dtype=np.complex64)
     Lipid_rf_Rand = np.zeros((NbEx, (N)), dtype=np.complex64)
-    #comboLorGauss = np.zeros((NbEx,N), dtype=np.complex64)
-    #print('shape of TimeSerie ={}.'.format(TimeSerie[N1:N2].shape))
-    #print('N1={}, N2={}, number of points in reduced data ={}.'.format(N1,N2,(N2-N1+1)))
     Time = np.linspace(0, N - 1, N) / Fs 
     Frequencies = np.linspace(0, 1, N) * Fs
 
@@ -99,7 +87,7 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
   
     list_file = glob.glob(ScriptPath+'/MetabModes/3T_TE0/*Exact_Modes.txt')
     NbM = len(list_file)
-   # metabo_modes = [None]
+
     metabo_modes = [[[None] for j in range(NbM)] for i in range(6)]
     temp_modes = ReadModeFiles(index,list_file)
     metabo_modes[0]=temp_modes
@@ -139,10 +127,7 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
     temp_modes = ReadModeFiles(index,list_file)
     metabo_modes[5]=temp_modes
     
-    #for BasisID in metabo_modes:
-        #print(BasisID)
-        #for modesID in BasisID:
-            #print(modesID)
+    
     
     if verbose:
         print(index)
@@ -170,9 +155,9 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
     PhShift = rand(NbEx, 1) * 2 * PI
     AcquDelay =  (rand(NbEx, 1)-0.5)*2 * MaxAcquDelay
     LipidScaling =  1e-1*(10**(rand(NbEx, 1)*np.log10(1e1*MaxLipidScaling)))   
-    #LipidScaling =  rand(NbEx, 1)*MaxLipidScaling;  # There is not much cases with Lipid<Metab in reality and in the Brain: Lipid ~100-1000 Metab signal
-    WaterScaling=  1e-2*(10**(rand(NbEx, 1)*np.log10(1e2*MaxWatScaling))); #1e-3*(10**(rand(NbEx, 1)*np.log10(1e3*MaxLipidScaling)))
-    BLScaling =  1e-2*(10**(rand(NbEx, 1)*np.log10(1e2*MaxBLScaling))); #rand(NbEx, 1)*LipidScaling + rand(NbEx, 1)*WaterScaling
+    
+    WaterScaling=  1e-2*(10**(rand(NbEx, 1)*np.log10(1e2*MaxWatScaling)))
+    BLScaling =  1e-2*(10**(rand(NbEx, 1)*np.log10(1e2*MaxBLScaling)))
     
     #print('LipidScaling: {}'.format(LipidScaling))     
     
@@ -182,8 +167,7 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
     if LipStackFile:    
         for ex in range(NbEx):
             LipPos=np.round((rand(NbCombVox)*np.shape(Lipid_rf)[0]-0.5)*0.9999999999)
-            #WaterPos=np.round((rand(1)*np.shape(Water_rf)[0]-0.5)*0.9999999999)
-            #WAmp=(rand(1))
+            
             LipAmp=(rand(NbCombVox));
             LipidPh= 2 * PI * rand(NbCombVox)
             LipAmp=LipAmp/np.sum(LipAmp)
@@ -191,25 +175,13 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
             for LipV in range(NbCombVox):
                 Lipid_rf_Rand[ex,:] += LipAmp[LipV]*np.exp(1j * LipidPh[LipV])*Lipid_rf[int(LipPos[LipV]),:]
             
-    #if WaterStackFile:
-    #    WaterPh = rand(NbEx, 1) * 2 * PI
-    #    WaterScaling =  1e-3*(10**(rand(NbEx, 1)*np.log10(1e3*MaxLipidScaling)))
-    #    for ex in range(NbEx):
-    #        WaterPos=np.round((rand(1)*np.shape(Water_rf)[0]-0.5)*0.9999999999)
-    #        Water_rf_Rand[ex,:] = WAmp*Water_rf[int(WaterPos),:]   
+    
 
     SNR = MinSNR + rand(NbEx, 1) * (MaxSNR - MinSNR)
     
 
 
-    #TempMetabData = np.zeros( (len(metabo_modes),len(metabo_modes[0]), N), dtype=np.complex64)
-    #for i in range(len(metabo_modes)):
-    #    for f, mode in enumerate(metabo_modes[i]):
-    #        Freq = ((4.7-mode[:, 0]) * 1e-6 * NMRFreq)[...,None]
-    #        for Nuc in range(len(Freq)):
-    #            TempMetabData[i,f, :] += mode[Nuc, 1][...,None] * np.exp(1j * mode[Nuc, 2][...,None]) * np.exp(2 * PI * 1j * (Time)  * Freq[Nuc])  
-
-    #print('np.shape(metabo_modes): {}'.format(np.shape(metabo_modes)))     Pauls change!
+    
     print('len(metabo_modes): {}'.format(len(metabo_modes)))
     print('np.shape(Amplitude): {}'.format(np.shape(Amplitude))) 
     
@@ -323,12 +295,6 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
 
         AllInSpectra[ex, :] = MetabSpectra[ex, :] + Lipid_BL_Wat_Spectra[ex, :] 
 
-
-        #SpectraClean[ex,:] = np.fft.fft(TimeSerieClean, axis=0)[N1:N2]
-
-        #if WaterStackFile:
-        #    Water_max =  np.max(np.abs(Water_rf_Rand[ex,:]), axis=0)
-        #    Spectra[ex, :] +=  Metab_max/Lip_max*WaterScaling[ex]*np.exp(1j * WaterPh[ex]) *Water_rf_Rand[ex,:]
         
 
     SingleMetabSpectra = np.fft.fft(TempMetabData, axis=1)[:,N1:N2]
