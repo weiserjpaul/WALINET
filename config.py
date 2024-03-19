@@ -3,7 +3,7 @@
 params ={}
 
 # Path
-params["model_name"] = "test"# "EXP_1" 
+params["model_name"] =  "WALINET" #"test"# "EXP_1" 
 params["path_to_model"] = "models/" + params["model_name"] + "/"
 params["path_to_data"] = "data/"
 
@@ -32,6 +32,6 @@ params["out_channels"] = 2
 params["dropout"] = 0.0
 
 # Configurations
-params["clean_model"] = False # Overwrites exisiting models. Exclusively removes models called "test"
-params["train"] = False
+params["clean_model"] = True # Overwrites exisiting models. Exclusively removes models called "test"
+params["train"] = True
 params["predict"] = True
