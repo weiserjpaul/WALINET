@@ -34,6 +34,7 @@ The training spectra were generated through a multi-step process.
 - Subsequently, we extracted a collection of lipid spectra from voxels within the scalp region obtained from in-vivo datasets. To create the training input spectra, the simulated metabolite and collected lipid spectra were randomly combined.
 - To generate training data for WALINET, lipid-contaminated spectra were simulated with the water signal overlaid. This involved applying HSVD residual water removal to the same in-vivo datasets as mentioned earlier, to extract samples of the water signal. Subsequently, each simulated spectrum was augmented with a generated water signal.
 
+
 ### Results
 The figure below presents a qualitative comparison of WALICON and LIPCON to the conventional HSVD[^4]+L2-Lip-Reg.[^1] on two subjects of metabolic maps such as NAA, glutamate and inositol, residual signal maps of water and lipids and spectral quality by displaying SNR maps including selected spectra with LCModel fit.
 
@@ -49,6 +50,7 @@ This repository provides
 - The source code for the simulation of lipid contaminated metabolic spectra in 'LipIDCNN', which can be excuted with the script 'makeTrainData.py'.
 - The code to train a neural network in 'src', including a 'run.py' and 'config.py' file. The 'run.py' file is intended for execution, the corresponding parameters can be changed in the 'config.py' file.
 - A sample dataset of lipid spectra and the corresponding lipid projection operator are located in the direcotry 'data'
+- The trained model WALINET and LIPNET from our paper.
 
 ### Installation
 Make sure all the required packages are installed
@@ -64,12 +66,28 @@ Training data is generated from the 'LipProj' (sipid projection operator) and th
 python makeTrainData.py
 ```
 
-#### Train WALINET
-To start the training of WALINET with the previously generated data, the run.py file has to be executed.
+#### Train your own WALINET
+To start the training of WALINET with the previously generated data, the 'run.py' file has to be executed.
 ```
 python run.py
 ```
-Please modify the config.py file to adjust the number of epochs and other training parameters.
+Please modify the 'config.py' file to adjust the number of epochs and other training parameters.
+
+#### Apply provided models
+Train models WALINET and LIPNET are provided in the directory 'models'. The easiest way to apply them is by changing the following parameters in the 'config.py' file
+```python
+params["model_name"] =  "WALINET" # or "LIPNET"
+
+# Configurations
+params["clean_model"] = False
+params["train"] = False # deactivate training
+params["predict"] = True # activate prediction
+```
+
+After that you can execute the 'run.py' file similarly as above.
+```
+python run.py
+```
 
 ### References
 
