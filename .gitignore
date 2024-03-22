@@ -1,9 +1,8 @@
 # exclude data and model files
 data/*
 !data/.gitkeep
-!data/vol22
-data/vol22/*
-!data/vol22/.gitkeep
+#!data/vol22
+#data/vol22/*
 #!data/vol22/vol22_LipStack_100MB.h5
 #!data/vol22/vol22_LipStack_50MB.h5
 #!data/vol22/vol22_LipProj.h5
