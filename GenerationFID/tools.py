@@ -33,7 +33,6 @@ def load_LipidStackdata(filename):
         Data_rf=np.transpose(arrays['realData']+ 1j* arrays['imagData'],(1,0))
     else:
         Data_rf=arrays['Lipid_Stack_File']
-    #Data_rf=arrays['realData']+ 1j* arrays['imagData']
     return Data_rf,  samplerate, Npt, N1, N2,NMRfreq
 #_______________________________________________________________________________________________
 #_______________________________________________________________________________________________
@@ -61,7 +60,6 @@ def load_LipidOpdata(filename):
         Data_cff=np.transpose(arrays['realLipidProj']+ 1j* arrays['imagLipidProj'],(2,1,0))
     else:
         Data_cff=arrays['LipidProj']
-    #Data_rf=arrays['realData']+ 1j* arrays['imagData']
     return Data_cff,  samplerate, Npt, N1, N2,NMRfreq
 
 #_______________________________________________________________

@@ -7,20 +7,13 @@
 def main(raw_args=None):
 
 #Generation of training and test dataset.
-#Robuste Script (Peter's script majority re-use)
+#Robuste Script
 
     import argparse
     parser = argparse.ArgumentParser(description='Generate dataset.')
     parser.add_argument('-o', '--output', dest='filename', required=True, help='Ouput filename (filename.h5)')
     parser.add_argument('-l', '--LipData', dest='LipidFile', help='Lipid Data filename (LipidFile.h5)')
     parser.add_argument('-lop', '--LipOp', dest='LipidProjFile',required=True)
-    #parser.add_argument('-w', '--WaterData', dest='WaterFile',default=0, help='Water Data filename (WFile.h5)')
-    #parser.add_argument('--wstart', dest='WINDOW_START', default=4.5,
-    #                    help='highest ppm value of the frequency window (default: %(default)s)')
-    #parser.add_argument('--wend', dest='WINDOW_END', default=0.0,
-    #                    help='lowest ppm value of the frequency window (default: %(default)s)')
-    #parser.add_argument('-N1', dest='N1', required=True, help='First point of the Freq. window (default: %(default)s)')
-    #parser.add_argument('-N2', dest='N2', required=True, help='Last point of the Freq. window  (default: %(default)s)')
     
     parser.add_argument('--ntrain', dest='nbex_train', default=1000000,
                         help='Number of realizations for training (default: %(default)s)')
@@ -54,8 +47,6 @@ def main(raw_args=None):
 			help='Maximum relative BL  to metabolite amplitudes (default: %(default))')
     parser.add_argument('--nWat', dest='NbWat', default=10,
                         help='Number of peak functions to simulate the water signal(default: %(default))')                     			
-    #parser.add_argument('--nmrfreq', dest='NMRFreq', default='123.2625e6',
-                        #help='Magnet Resonance Freq. (default: %(default) s)')
     parser.add_argument('-f', '--force', dest='update', action='store_true',
                         help='Force overwriting existing file')
     parser.add_argument('-v', dest='verbose', action='store_true',
@@ -129,17 +120,11 @@ def main(raw_args=None):
         dset.attrs['MaxWatScaling'] = float(args.MaxWatScaling)
         dset.attrs['energy'] = spectra_energy
         train.create_dataset('SNR', data=snr) 
-        #dset.attrs['SNR'] = snr
         train.create_dataset('freqshift', data=freq_shift, fletcher32=True)  
-        #dset.attrs['freqshift'] = freq_shift
         train.create_dataset('phshift', data=ph_shift, fletcher32=True)  
-        #dset.attrs['phshift'] = ph_shift
         train.create_dataset('Lorwidth', data=peakwidth_Lor, fletcher32=True)  
-        #dset.attrs['Lorwidth'] = peakwidth_Lor
         train.create_dataset('Gauwidth', data=peakwidth_Gau, fletcher32=True)
-        #dset.attrs['Gauwidth'] = peakwidth_Gau
         train.create_dataset('acqdelay', data=acqudelay, fletcher32=True)
-        #dset.attrs['acqdelay'] = acqudelay
         train.create_dataset('LipidScaling', data=LipidScaling, fletcher32=True)
         train.create_dataset('BLScaling', data=BLScaling, fletcher32=True)
         train.create_dataset('WatScaling', data=WaterScaling, fletcher32=True)  
@@ -184,17 +169,11 @@ def main(raw_args=None):
         dset.attrs['energy'] = spectra_energy
         train.create_dataset('SNR', data=snr, fletcher32=True)
    
-        #dset.attrs['SNR'] = snr
         train.create_dataset('freqshift', data=freq_shift, fletcher32=True)  
-        #dset.attrs['freqshift'] = freq_shift
         train.create_dataset('phshift', data=ph_shift, fletcher32=True)  
-        #dset.attrs['phshift'] = ph_shift
         train.create_dataset('Lorwidth', data=peakwidth_Lor, fletcher32=True)  
-        #dset.attrs['Lorwidth'] = peakwidth_Lor
         train.create_dataset('Gauwidth', data=peakwidth_Gau, fletcher32=True)
-        #dset.attrs['Gauwidth'] = peakwidth_Gau
         train.create_dataset('acqdelay', data=acqudelay, fletcher32=True)
-        #dset.attrs['acqdelay'] = acqudelay
         train.create_dataset('LipidScaling', data=LipidScaling, fletcher32=True)
         train.create_dataset('BLScaling', data=BLScaling, fletcher32=True)
         train.create_dataset('WatScaling', data=WaterScaling, fletcher32=True) 
@@ -202,12 +181,8 @@ def main(raw_args=None):
         train.create_dataset('SingleMetab_spectra', data=SingleMetab_spectra, fletcher32=True)     
         train.create_dataset('amplitudes', data=amplitudes, fletcher32=True)
 
-        #train.create_dataset('Metab_spectra', data=Metab_spectra, fletcher32=True)
         train.create_dataset('Lipid_BL_Wat_spectra', data=Lipid_BL_Wat_spectra, fletcher32=True)
         train.create_dataset('LipidID_spectra', data=LipidID_spectra, fletcher32=True)
-
-        #train.create_dataset('BL_spectra', data=BL_spectra, fletcher32=True)
-        #train.create_dataset('Water_spectra', data=Water_spectra, fletcher32=True)
 
 if __name__ == '__main__':
     main()

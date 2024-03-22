@@ -56,7 +56,7 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
     
 
     
-    N = Npt #np.shape(Lipid_rf)[1]
+    N = Npt
 
     TimeSerie = np.zeros(( N), dtype=np.complex64)
     TimeSerieClean = np.zeros(( N), dtype=np.complex64)
@@ -159,7 +159,6 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
     WaterScaling=  1e-2*(10**(rand(NbEx, 1)*np.log10(1e2*MaxWatScaling)))
     BLScaling =  1e-2*(10**(rand(NbEx, 1)*np.log10(1e2*MaxBLScaling)))
     
-    #print('LipidScaling: {}'.format(LipidScaling))     
     
     LipidPh = rand(NbEx, 1) * 2 * PI
 
@@ -198,8 +197,6 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
     
         TempMetabData =0*TempMetabData
         for f, mode in enumerate(metabo_modes[int(BasisI[ex])]):
-                #print('metab nb: ({} ).'.format(f))
-                #print(mode)
                 Freq = ((4.7-mode[:, 0]) * 1e-6 * NMRFreq)[...,None]
                 for Nuc in range(len(Freq)):
                     if (mode[Nuc, 0] > 0.0) & (mode[Nuc, 0] < 4.5)  : # only for the window of interest 
@@ -212,7 +209,6 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
         
         TimeSerieClean=0*TimeSerieClean
         for f, _ in enumerate(metabo_modes[int(BasisI[ex])]):
-            #print('metab nb: ({} ).'.format(f)) 
             TimeSerieClean[:] += Amplitude[ex, f] * TempMetabData[f, :]* np.exp(1j * PhShift[ex])  
             
         TimeSerieClean[:] = TimeSerieClean[ :] * np.exp( (Time* 1j * 2 * PI * FreqShift[ex] ) + (- (np.square(Time)) * (np.square(PeakWidth_Gau[ex]))) + ((np.absolute(Time)) * (- PeakWidth_Lor[ex]) ) )
@@ -245,8 +241,7 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
 
 
 
-        Metab_max = np.max(np.abs(np.fft.fft(TimeSerie, axis=0)[N1:N2]), axis=0)       
-        #print('Metab_max: {}.'.format(Metab_max))
+        Metab_max = np.max(np.abs(np.fft.fft(TimeSerie, axis=0)[N1:N2]), axis=0)
   
         if NbBL>0:
             BL_max =  np.max(np.abs(np.fft.fft(BLTimeSerie, axis=0)[N1:N2]), axis=0)
@@ -260,7 +255,6 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
             Lip_max =  np.max(np.abs(Lipid_rf_Rand[ex,N1:N2]), axis=0)
         else:
             Lip_max = 1E32
-        #print('shape(Lipid_rf_Rand[ex,:]): {}.'.format(np.shape(Lipid_rf_Rand[ex,:])))
 
         LipTimeSerie[:] = np.fft.ifft(Lipid_rf_Rand[ex,:] , axis=0)
 
@@ -272,7 +266,6 @@ def SimulateTrainingData(NbEx, MaxSNR, MinSNR, MaxFreq_Shift,MaxPeak_Width, MinP
 
         #Spectra with Removed Lip, Water and metab
         
-        #LipidIDSpBatch[BatchI,:] =   Metab_max/Lip_max*LipidScaling[ex] *Lipid_rf_Rand[ex,:]
         LipidIDSpBatch[BatchI,:] =    Metab_max/Lip_max*LipidScaling[ex] *np.fft.fft(LipTimeSerie[:] , axis=0)      
         if NbBL>0:
             LipidIDSpBatch[BatchI,:] +=  np.fft.fft(BLTimeSerie, axis=0)*Metab_max/BL_max*BLScaling[ex] #Add baseline
