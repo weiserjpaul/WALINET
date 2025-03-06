@@ -91,6 +91,16 @@ After that you can execute the 'run.py' file similarly as above.
 python run.py
 ```
 
+## Citation
+If you find this useful, please cite our work as follows:
+```
+@article{weiserwalinet,
+  title={WALINET: A water and lipid identification convolutional neural network for nuisance signal removal in 1H MR spectroscopic imaging},
+  author={Weiser, Paul J and Langs, Georg and Motyka, Stanislav and Bogner, Wolfgang and Courvoisier, S{\'e}bastien and Hoffmann, Malte and Klauser, Antoine and Andronesi, Ovidiu C},
+  journal={Magnetic resonance in medicine}
+}
+```
+
 ### References
 
 [^1]: Bilgic Berkin, Chatnuntawech Itthi, Fan Audrey P, et al. Fast image reconstruction with L2-regularization. Journal of magnetic resonance imaging. 2014;40(1):181–191
